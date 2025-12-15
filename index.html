@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grand Luxury Tree v17.6.5 - Fixed</title>
+    <title>Grand Luxury Tree v17.12 - Better Timing</title>
     <style>
         /* ================= 1. 基础设置 ================= */
-        /* 修复1：@import 必须放在样式表的最前面 */
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Great+Vibes&family=Monoton&family=Abril+Fatface&family=Ma+Shan+Zheng&display=swap');
 
         body { margin: 0; overflow: hidden; background-color: #050505; font-family: 'Microsoft YaHei', 'Songti SC', serif; }
         #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         
-        /* ================= 2. UI 视觉 (V17.6.3 原版样式) ================= */
+        /* ================= 2. UI 视觉 ================= */
         :root {
             --glass-bg: rgba(20, 20, 25, 0.75);
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -52,7 +51,6 @@
         .bottom-left-panel .ui-title-main { grid-column: span 2; font-size: 11px; margin-bottom: 4px; padding-bottom: 2px; }
         .bottom-left-panel .elegant-btn { width: 100%; font-size: 10px; height: 28px; }
 
-        /* 修复 input file 样式 */
         .bottom-left-panel .elegant-btn { width: 100%; font-size: 10px; height: 28px; position: relative; }
         .elegant-btn input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
@@ -130,7 +128,12 @@
         <div id="left-sidebar">
             <div class="top-left-panel glass-panel"><div class="ui-title-main">场景定制</div> 
                 <div class="ui-title-sub">祝福语录</div><div class="control-row"><input type="text" id="input-line1" class="input-glass" placeholder="第一行文字" oninput="updateTextConfig()"><input type="text" id="input-line2" class="input-glass" placeholder="第二行文字" oninput="updateTextConfig()" style="margin-top:2px;"></div><div class="ui-title-sub">字体风格</div><select id="font-select" class="input-glass" onchange="updateTextConfig()"><option value="style1">书法韵味</option><option value="style2">古典衬线</option><option value="style3">优雅手写</option><option value="style4">艺术线条</option><option value="style5">复古重磅</option></select><div class="control-row"><div class="ui-title-sub" style="margin-top:6px;">大小 & 颜色</div><div style="display:flex; gap:8px; align-items:center;"><input type="range" min="50" max="250" value="100" id="slider-fontsize" oninput="updateTextConfig()"><input type="color" id="color-picker" value="#fceea7" oninput="updateTextConfig()" style="width:30px; height:20px; border:none;"></div></div><div class="ui-title-sub" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:6px; margin-top:6px;">背景音乐</div><div style="display:flex; gap:8px; margin-bottom:4px;"><button class="elegant-btn" onclick="toggleMusicPlay()" id="play-btn" style="flex:2; font-size:14px;">⏯</button><button class="elegant-btn" onclick="replayMusic()" style="flex:1; font-size:14px;">⟲</button></div><div class="control-row"><span class="control-label" style="text-align:center;">音量调节</span><input type="range" min="0" max="100" value="50" id="slider-volume" oninput="updateVolume(this.value)"></div><div class="ui-title-sub" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:6px; margin-top:6px;">粒子控制</div><div class="particle-scroll-container"><div class="control-row"><span class="control-label">装饰密度 (树)</span><input type="range" min="500" max="3000" value="1500" id="slider-tree"></div><div class="control-row"><span class="control-label">星尘密度 (背景)</span><input type="range" min="500" max="5000" value="2500" id="slider-dust"></div><div class="control-row"><span class="control-label">雪花数量</span><input type="range" min="0" max="3000" step="100" value="1500" id="slider-snow-count" onchange="updateSnowSettings()"></div><div class="control-row"><span class="control-label">雪花大小</span><input type="range" min="0.05" max="0.3" step="0.01" value="0.12" id="slider-snow-size" onchange="updateSnowSettings()"></div><div class="control-row"><span class="control-label">下落速度</span><input type="range" min="1.0" max="8.0" step="0.5" value="3.5" id="slider-snow-speed" oninput="updateSnowSpeed(this.value)"></div></div><button class="elegant-btn" style="width:100%; margin-top:8px;" onclick="applyParticleSettings()">⚡ 重置场景</button></div>
-            <div class="top-left-panel glass-panel"><div class="ui-title-main">交互中控</div><div class="ui-title-sub">形态切换</div><div class="interaction-grid"><button class="elegant-btn" style="flex:1;" onclick="setMode('TREE')">聚合 (Space)</button><button class="elegant-btn" style="flex:1;" onclick="setMode('SCATTER')">散开 (Z)</button></div><button class="elegant-btn" style="width:100%;" onclick="triggerPhotoGrab()">抓取照片 (X)</button><div class="control-row" style="margin-top:8px;"><span class="control-label">旋转速度 (散开)</span><input type="range" min="0.1" max="5.0" step="0.1" value="1.4" oninput="updateRotationSpeed(this.value)"></div><div class="direction-pad"><div></div><div class="dir-btn" onmousedown="startRotate('up')" onmouseup="stopRotate()" onmouseleave="stopRotate()">▲</div><div></div><div class="dir-btn" onmousedown="startRotate('left')" onmouseup="stopRotate()" onmouseleave="stopRotate()">◀</div><div class="dir-btn" onclick="resetRotation()" style="font-size:10px;">●</div><div class="dir-btn" onmousedown="startRotate('right')" onmouseup="stopRotate()" onmouseleave="stopRotate()">▶</div><div></div><div class="dir-btn" onmousedown="startRotate('down')" onmouseup="stopRotate()" onmouseleave="stopRotate()">▼</div><div></div></div></div>
+            <div class="top-left-panel glass-panel"><div class="ui-title-main">交互中控</div><div class="ui-title-sub">形态切换</div>
+                <div class="interaction-grid">
+                    <button class="elegant-btn" style="flex:1;" onclick="setMode('TREE')">聚合 (Space)</button>
+                    <button class="elegant-btn" style="flex:1;" onclick="cycleNextPhoto()">抓取照片 (Z)</button>
+                </div>
+                <div class="control-row" style="margin-top:8px;"><span class="control-label">旋转速度 (散开)</span><input type="range" min="0.1" max="5.0" step="0.1" value="1.4" oninput="updateRotationSpeed(this.value)"></div><div class="direction-pad"><div></div><div class="dir-btn" onmousedown="startRotate('up')" onmouseup="stopRotate()" onmouseleave="stopRotate()">▲</div><div></div><div class="dir-btn" onmousedown="startRotate('left')" onmouseup="stopRotate()" onmouseleave="stopRotate()">◀</div><div class="dir-btn" onclick="resetRotation()" style="font-size:10px;">●</div><div class="dir-btn" onmousedown="startRotate('right')" onmouseup="stopRotate()" onmouseleave="stopRotate()">▶</div><div></div><div class="dir-btn" onmousedown="startRotate('down')" onmouseup="stopRotate()" onmouseleave="stopRotate()">▼</div><div></div></div></div>
         </div>
         <div class="bottom-left-panel glass-panel"><div class="ui-title-main" style="font-size:12px; margin-bottom:5px;">资源管理</div><label class="elegant-btn"> + 上传照片 <input type="file" id="file-input" multiple accept="image/*"> </label><button class="elegant-btn" onclick="openDeleteManager()">▣ 管理照片</button><label class="elegant-btn" id="music-upload-label"> ♫ 背景音乐 <input type="file" id="music-input" accept=".mp3,audio/mpeg"> </label><button class="elegant-btn" id="toggle-cam-btn" onclick="toggleCameraDisplay()">📷 隐藏画面</button></div>
     </div>
@@ -161,6 +164,11 @@
 
         const STATE = { mode: 'TREE', focusTarget: null, focusType: 0, hand: { detected: false, x: 0, y: 0 }, rotation: { x: 0, y: 0 }, uiVisible: true, cameraVisible: true };
         let manualRotateState = { x: 0, y: 0 };
+        // 新增：记录当前轮播到的照片索引
+        let currentPhotoIndex = -1;
+        let autoPlayTimer = null; // 防抖动计时器
+        let lastGestureTime = 0; // 手势冷却计时器
+
         const FONT_STYLES = { 'style1': { font: "'Ma Shan Zheng', cursive", spacing: "4px", shadow: "2px 2px 8px rgba(180,50,50,0.8)", transform: "none" }, 'style2': { font: "'Cinzel', serif", spacing: "6px", shadow: "0 0 20px rgba(255,215,0,0.5)", transform: "none" }, 'style3': { font: "'Great Vibes', cursive", spacing: "1px", shadow: "0 0 15px rgba(255,200,255,0.7)", transform: "none" }, 'style4': { font: "'Monoton', cursive", spacing: "1px", shadow: "0 0 10px #fff", transform: "none" }, 'style5': { font: "'Abril Fatface', cursive", spacing: "0px", shadow: "0 5px 15px rgba(0,0,0,0.8)", transform: "none" } };
 
         let db;
@@ -223,39 +231,38 @@
             STATE.mode = mode;
             STATE.focusTarget = null;
             const hint = document.getElementById('gesture-hint');
-            if(mode === 'TREE') hint.innerText = "状态: 聚合 (圣诞树)";
-            else if(mode === 'SCATTER') hint.innerText = "状态: 散开 (星云)";
-            else if(mode === 'FOCUS') hint.innerText = "状态: 抓取照片";
+            // 修改了提示文本，指导用户使用 OK 或 捏合手势
+            if(mode === 'TREE') hint.innerText = "状态: 聚合 (比OK手势抓取照片)";
+            else if(mode === 'SCATTER') hint.innerText = "状态: 散开 (比OK手势抓取照片)";
+            else if(mode === 'FOCUS') hint.innerText = "状态: 照片展示中...";
         }
 
-        window.triggerPhotoGrab=()=> { 
-            let cp=null,md=Infinity; 
-            STATE.focusType=Math.floor(Math.random()*4); 
-            particleSystem.filter(p=>p.type==='PHOTO').forEach(p=>{ 
-                p.mesh.updateMatrixWorld(); 
-                const pos=new THREE.Vector3(); 
-                p.mesh.getWorldPosition(pos); 
-                const sp=pos.project(camera); 
-                const d=Math.hypot(sp.x,sp.y); 
-                if(sp.z<1 && d<CONFIG.interaction.grabRadius){
-                    if(d<md){md=d;cp=p.mesh;}
-                } 
-            }); 
+        // 双重停顿序列
+        window.cycleNextPhoto = () => {
+            if(autoPlayTimer) clearTimeout(autoPlayTimer);
+            const photoParticles = particleSystem.filter(p => p.type === 'PHOTO');
+            if (photoParticles.length === 0) return;
             
-            if(cp){
-                setMode('FOCUS'); 
-                STATE.focusTarget=cp; 
-            } else {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photoParticles.length;
+
+            resetRotation(); // Tree
+            const hint = document.getElementById('gesture-hint');
+            hint.innerText = `准备展示第 ${currentPhotoIndex + 1} 张照片...`;
+
+            autoPlayTimer = setTimeout(() => {
                 setMode('SCATTER');
-            }
+                setTimeout(() => {
+                     setMode('FOCUS');
+                     STATE.focusTarget = photoParticles[currentPhotoIndex].mesh;
+                     STATE.focusType = Math.floor(Math.random() * 4);
+                }, 500); // Wait 0.5s before focus
+            }, 1500); // Wait 1.5s before scatter (TREE duration)
         };
         
         window.startRotate=(d)=> { if(d==='up')manualRotateState.x=-1; if(d==='down')manualRotateState.x=1; if(d==='left')manualRotateState.y=-1; if(d==='right')manualRotateState.y=1; };
         window.stopRotate=()=> { manualRotateState={x:0,y:0}; };
         window.resetRotation=()=> { STATE.rotation={x:0,y:0}; if(STATE.mode!=='TREE')setMode('TREE'); };
 
-        // ================= V17.6.5: UI + Keyboard =================
-        // 修复2：这里的 window.setupEvents 之前因为注释和换行符问题被吞掉了，现在修复格式
         window.setupEvents = function() {
             window.addEventListener('resize', () => { 
                 camera.aspect = window.innerWidth/window.innerHeight; 
@@ -285,7 +292,6 @@
                 }
             });
 
-            // 修复3：键盘交互的注释之前也注释掉了代码
             // --- Keyboard Controls ---
             window.addEventListener('keydown', (e) => {
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
@@ -296,8 +302,12 @@
                 if (k === 'h') window.toggleUI();
 
                 if (code === 'Space') { e.preventDefault(); setMode('TREE'); }
-                if (k === 'z') setMode('SCATTER');
-                if (k === 'x') triggerPhotoGrab();
+                
+                // 按 Z 触发双重停顿序列
+                if (k === 'z') window.cycleNextPhoto(); 
+                
+                // x 键保留功能但UI已删除，防误触可保留或注释掉
+                // if (k === 'x') cycleNextPhoto(); // 也可以把 X 映射到新逻辑
 
                 if (code === 'ArrowUp') manualRotateState.x = -1;
                 if (code === 'ArrowDown') manualRotateState.x = 1;
@@ -369,7 +379,34 @@
         async function initMediaPipe(){videoElement=document.getElementById('webcam-video');if(navigator.mediaDevices?.getUserMedia){try{const s=await navigator.mediaDevices.getUserMedia({video:true});videoElement.srcObject=s;videoElement.onloadedmetadata=()=>{videoElement.play();renderWebcamPreview()};}catch(e){console.error(e)}}try{const v=await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");handLandmarker=await HandLandmarker.createFromOptions(v,{baseOptions:{modelAssetPath:`https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,delegate:"GPU"},runningMode:"VIDEO",numHands:1});predictWebcam();}catch(e){console.warn(e)}}
         function renderWebcamPreview(){const c=document.getElementById('webcam-canvas'),x=c.getContext('2d',{willReadFrequently:true});function d(){if(videoElement.readyState>=2)x.drawImage(videoElement,0,0,c.width,c.height);requestAnimationFrame(d)}d()}
         let lvt=-1;async function predictWebcam(){if(videoElement&&videoElement.currentTime!==lvt&&handLandmarker){lvt=videoElement.currentTime;const r=handLandmarker.detectForVideo(videoElement,performance.now());processGestures(r);document.getElementById('cam-status').classList.toggle('active',r.landmarks.length>0);}requestAnimationFrame(predictWebcam);}
-        function processGestures(r){if(r.landmarks&&r.landmarks.length>0){STATE.hand.detected=true;const lm=r.landmarks[0];STATE.hand.x=(lm[9].x-0.5)*2;STATE.hand.y=(lm[9].y-0.5)*2;const thumb=lm[4],index=lm[8],wrist=lm[0],middle=lm[12];const pd=Math.hypot(thumb.x-index.x,thumb.y-index.y);const od=Math.hypot(middle.x-wrist.x,middle.y-wrist.y);if(STATE.mode==='FOCUS'){if(pd>0.1)setMode('SCATTER');return;}if(pd<0.05&&STATE.mode!=='FOCUS')triggerPhotoGrab();else if(od>0.4)setMode('SCATTER');else if(od<0.2)setMode('TREE');}else STATE.hand.detected=false;}
+        
+        // 修改后的手势处理：支持 OK手势/捏合 触发自动序列，带1秒冷却
+        function processGestures(r){
+            if(r.landmarks&&r.landmarks.length>0){
+                STATE.hand.detected=true;
+                const lm=r.landmarks[0];
+                STATE.hand.x=(lm[9].x-0.5)*2;
+                STATE.hand.y=(lm[9].y-0.5)*2;
+                
+                const thumb=lm[4], index=lm[8];
+                const pd=Math.hypot(thumb.x-index.x, thumb.y-index.y); // 捏合/OK手势距离
+                
+                // 如果是 FOCUS 模式，只要距离大了就散开（手张开）
+                if(STATE.mode==='FOCUS'){
+                    if(pd > 0.1) setMode('SCATTER');
+                    return;
+                }
+                
+                // 核心修改：OK手势触发自动序列 (带1秒冷却，防止连续触发)
+                if(pd < 0.05) { 
+                    const now = Date.now();
+                    if(now - lastGestureTime > 1000) { // 1s Cooldown
+                        cycleNextPhoto(); // 触发双重停顿序列
+                        lastGestureTime = now;
+                    }
+                } 
+            } else STATE.hand.detected=false;
+        }
 
         window.openDeleteManager=async()=>{document.getElementById('delete-manager').classList.remove('hidden');const g=document.getElementById('photo-grid');g.innerHTML='';const ps=await loadPhotosFromDB();if(!ps||ps.length===0)g.innerHTML='<div style="color:#888;">暂无照片</div>';else ps.forEach(p=>{const d=document.createElement('div');d.className='photo-item';const i=document.createElement('img');i.className='photo-thumb';i.src=p.data;const b=document.createElement('div');b.className='delete-x';b.innerText='X';b.onclick=e=>{e.stopPropagation();confirmDelete(p.id,d)};d.appendChild(i);d.appendChild(b);g.appendChild(d)})}
         window.confirmDelete=(id,el)=>{deletePhotoFromDB(id);el.remove();const p=particleSystem.find(pa=>pa.photoId===id);if(p){photoMeshGroup.remove(p.mesh);particleSystem.splice(particleSystem.indexOf(p),1)}}
